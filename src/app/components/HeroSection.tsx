@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles, ChevronDown } from 'lucide-react';
-import { usePetalStore } from '../store/petalStore';
+import { usePetalStore } from '../store/PetalStore';
 
 interface TimeLeft {
   days: number;

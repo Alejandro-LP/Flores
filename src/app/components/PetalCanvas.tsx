@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { usePetalStore } from '../store/petalStore';
+import { usePetalStore } from '../store/PetalStore';
 
 interface Flower {
   x: number;
