@@ -1,34 +1,44 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Star, Sun, Heart } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
 
+const MONTHS_ES = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+];
 
+function getTodayLabel() {
+  const now = new Date();
+  const day = now.getDate();
+  const month = MONTHS_ES[now.getMonth()];
+  return `Hoy, ${day} de ${month}`;
+}
 
-const timelineEvents = [
-{
-  date: '5 de julio, 2026',
-  title: 'El día que todo cambió',
-  description: 'El universo conspiró para que nuestros caminos se cruzaran. Desde ese instante, supe que algo extraordinario había comenzado.',
-  icon: Star,
-},
-{
-  date: 'Cada día desde entonces',
-  title: 'Construyendo algo hermoso',
-  description: 'Cada conversación, cada risa compartida, cada momento contigo ha ido tejiendo la historia más bonita de mi vida.',
-  icon: Sun,
-},
-{
-  date: 'Hoy, 17 de septiembre',
-  title: 'Día de las Flores Amarillas',
-  description: 'Hoy te regalo flores amarillas —símbolo de alegría y amistad profunda— porque eso eres tú para mí: mi alegría más grande.',
-  icon: Heart,
-}];
+const baseEvents = [
+  {
+    date: '5 de julio, 2026',
+    title: 'El día que todo cambió',
+    description: 'El universo conspiró para que nuestros caminos se cruzaran. Desde ese instante, supe que algo extraordinario había comenzado.',
+    icon: Star,
+  },
+  {
+    date: 'Cada día desde entonces',
+    title: 'Construyendo algo hermoso',
+    description: 'Cada conversación, cada risa compartida, cada momento contigo ha ido tejiendo la historia más bonita de mi vida.',
+    icon: Sun,
+  },
+  {
+    date: '',
+    title: 'Día de las Flores Amarillas',
+    description: 'Hoy te regalo flores amarillas —símbolo de alegría y amistad profunda— porque eso eres tú para mí: mi alegría más grande.',
+    icon: Heart,
+  }
+];
 
-
-function TimelineCard({ event, index }: {event: typeof timelineEvents[0];index: number;}) {
+function TimelineCard({ event, index }: { event: typeof baseEvents[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
   const Icon = event.icon;
@@ -58,13 +68,22 @@ function TimelineCard({ event, index }: {event: typeof timelineEvents[0];index: 
           <p className="text-sm text-muted-foreground leading-relaxed">{event.description}</p>
         </div>
       </div>
-    </motion.div>);
-
+    </motion.div>
+  );
 }
 
 export default function StorySection() {
   const headRef = useRef<HTMLDivElement>(null);
   const headInView = useInView(headRef, { once: true });
+  const [timelineEvents, setTimelineEvents] = useState(baseEvents);
+
+  useEffect(() => {
+    setTimelineEvents(prev =>
+      prev.map((event, i) =>
+        i === prev.length - 1 ? { ...event, date: getTodayLabel() } : event
+      )
+    );
+  }, []);
 
   return (
     <section id="story" className="py-16 px-5">
@@ -96,11 +115,11 @@ export default function StorySection() {
 
           <div className="space-y-8">
             {timelineEvents.map((event, i) =>
-            <TimelineCard key={i} event={event} index={i} />
+              <TimelineCard key={i} event={event} index={i} />
             )}
           </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
